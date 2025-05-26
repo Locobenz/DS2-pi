@@ -1,0 +1,24 @@
+<?php
+// Démarrage conditionnel de la session et génération du CSRF token
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+?>
+<nav>
+  <?php if (empty($hideNavLinks)): ?>
+    <?php if (!isset($_SESSION['user_id'])): ?>
+      <a href="register.php">S'inscrire</a> |
+      <a href="login.php">Se connecter</a>
+    <?php else: ?>
+      <?php if ($_SESSION['role'] === 'recruiter'): ?>
+        <a href="recruiter_dashboard.php">Tableau de bord</a> |
+      <?php else: ?>
+        <a href="candidate_dashboard.php">Tableau de bord</a> |
+      <?php endif; ?>
+      <a href="logout.php">Se déconnecter</a>
+    <?php endif; ?>
+  <?php endif; ?>
+</nav>
